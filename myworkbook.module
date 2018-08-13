@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Module for handling altering functionality.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger;
+
+/**
+ * Implements hook_form_alter().
+ */
+function myworkbook_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if ($form_id == "system_site_information_settings") {
+    $config = \Drupal::config('system.site');
+    $siteapikey = $config->get('siteapikey');
+    $form['siteapikey'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#default_value' => ($siteapikey) ? $siteapikey : "",
+      '#attributes' => array(
+        'placeholder' => t('No Site API Key'),
+      ),
+    );
+    $form['actions']['submit']['#value'] = t('Update Configuration');
+    $form['#submit'][] = 'myworkbook_form_submit';
+  }
+}
+
+/**
+ * Submit handler for form.
+ */
+function myworkbook_form_submit($form, FormStateInterface $form_state) {
+  $siteapikey = $form_state->getValue('siteapikey');
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  $config->set('siteapikey', $siteapikey)->save();
+  $messenger = \Drupal:: messenger();
+  $messenger->addMessage(t('The Site API Key has been saved with @value .', array('@value' => $siteapikey)));
+}

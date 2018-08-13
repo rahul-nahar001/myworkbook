@@ -1,0 +1,6 @@
+services:
+  myworkbook.json_access_check:
+    class: Drupal\myworkbook\Access\jsonAccessCheck
+    arguments: ['api', 'node']
+    tags:
+      - { name: access_check, ap_json_access_checkplies_to: _json_access_check }

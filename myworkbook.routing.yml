@@ -1,0 +1,10 @@
+myworkbook.json:
+  path: '/page_json/{api}/{node}'
+  defaults:
+    _controller: '\Drupal\myworkbook\Controller\josnController::json'
+  requirements:
+   _json_access_check: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: entity:node
